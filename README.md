@@ -58,3 +58,72 @@ Recovery --> Postgres
 
 Redis --> Dashboard
 ```
+
+ 🔄 Job Lifecycle
+
+```text
+Client
+   │
+   ▼
+Create Job
+   │
+   ▼
+PostgreSQL Queue (PENDING)
+   │
+   ▼
+Worker Claims Job (Lease)
+   │
+   ▼
+PROCESSING
+   │
+   ├──────────────► Success
+   │                  │
+   │                  ▼
+   │             COMPLETED
+   │
+   └──────────────► Failure
+                      │
+                      ▼
+               Retry (Backoff)
+                      │
+          ┌───────────┴───────────┐
+          │                       │
+      Retry Left              Max Retries
+          │                       │
+          ▼                       ▼
+      PENDING               Dead Letter Queue
+```
+
+ Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Backend | Node.js, Express.js |
+| Frontend | React, Tailwind CSS |
+| Database | PostgreSQL + Prisma ORM |
+| Cache / Messaging | Redis Pub/Sub |
+| Real-time | WebSockets |
+| Containerization | Docker & Docker Compose |
+
+ Project Structure
+
+```text
+Reliable-Distributed-Job-Queue-Engine
+│
+├── backend
+│   ├── prisma
+│   ├── src
+│   │   ├── controllers
+│   │   ├── services
+│   │   ├── repositories
+│   │   ├── workers
+│   │   ├── routes
+│   │   └── ...
+│   └── Dockerfile
+│
+├── frontend
+│   ├── src
+│   └── Dockerfile
+│
+└── docker-compose.yml
+```
