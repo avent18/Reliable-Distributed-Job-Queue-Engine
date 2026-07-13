@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  PENDING
+  SCHEDULED
+  PROCESSING
+  COMPLETED
+  FAILED
+  DEAD_LETTER
+}
+
+enum JobPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum WorkerStatus {
+  ONLINE
+  BUSY
+  OFFLINE
+}
+
+model Job {
+  id              String        @id @default(cuid())
+
+  type            String
+  payload         Json
+
+  status          JobStatus     @default(PENDING)
+  priority        JobPriority   @default(MEDIUM)
+
+  attempts        Int           @default(0)
+  maxAttempts     Int           @default(3)
+
+  scheduledAt     DateTime?
+  availableAt     DateTime      @default(now())
+  nextRetryAt     DateTime?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  completedAt     DateTime?
+
+  version         Int           @default(1)
+
+  lease           JobLease?
+  deadLetter      DeadLetterJob?
+  processedJob    ProcessedJob?
+
+  dependencies    JobDependency[] @relation("JobDependencies")
+  dependents      JobDependency[] @relation("DependentJobs")
+
+  @@index([status, priority, availableAt])
+  @@index([scheduledAt])
+  @@index([createdAt])
+  @@index([status])
+}
+
+model Worker {
+  id              String        @id @default(cuid())
+
+  name            String        @unique
+  status          WorkerStatus  @default(ONLINE)
+
+  startedAt       DateTime      @default(now())
+  lastHeartbeat   DateTime      @default(now())
+
+  leases          JobLease[]
+
+  @@index([status])
+  @@index([lastHeartbeat])
+}
+
+model JobLease {
+  id              String      @id @default(cuid())
+
+  jobId           String      @unique
+  workerId        String
+
+  lockedAt        DateTime    @default(now())
+  leasedUntil     DateTime
+
+  job             Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  worker          Worker      @relation(fields: [workerId], references: [id], onDelete: Cascade)
+
+  @@index([leasedUntil])
+  @@index([workerId])
+}
+
+model DeadLetterJob {
+  id              String      @id @default(cuid())
+
+  jobId           String      @unique
+
+  failureReason   String
+  failureStack    String?
+
+  failedAt        DateTime    @default(now())
+  replayedAt      DateTime?
+
+  job             Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model ProcessedJob {
+  id                  String      @id @default(cuid())
+
+  jobId               String      @unique
+
+  idempotencyKey      String      @unique
+  resultHash          String?
+
+  processedAt         DateTime    @default(now())
+
+  job                 Job         @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([idempotencyKey])
+}
+
+model JobDependency {
+  id                  String      @id @default(cuid())
+
+  jobId               String
+  dependsOnJobId      String
+
+  job                 Job         @relation("JobDependencies", fields: [jobId], references: [id], onDelete: Cascade)
+
+  dependsOn           Job         @relation("DependentJobs", fields: [dependsOnJobId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, dependsOnJobId])
+
+  @@index([jobId])
+  @@index([dependsOnJobId])
+}
