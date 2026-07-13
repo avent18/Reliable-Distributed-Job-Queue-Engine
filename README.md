@@ -127,3 +127,48 @@ Reliable-Distributed-Job-Queue-Engine
 │
 └── docker-compose.yml
 ```
+
+##Getting Started
+
+### Prerequisites
+
+- Node.js 22+
+- PostgreSQL
+- Redis
+- Docker (Optional)
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/avent18/Reliable-Distributed-Job-Queue-Engine.git
+cd Reliable-Distributed-Job-Queue-Engine
+```
+
+### Backend Setup
+
+```bash
+cd backend
+npm install
+```
+
+Create a `.env` file inside the `backend` directory and configure your environment variables.
+
+Run database migrations:
+
+```bash
+npx prisma migrate deploy
+```
+
+Start the backend server:
+
+```bash
+npm run dev
+```
+
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
