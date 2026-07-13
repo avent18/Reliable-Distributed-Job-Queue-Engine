@@ -1,4 +1,4 @@
-# 🚀 Reliable Distributed Job Queue Engine
+# Reliable Distributed Job Queue Engine
 
 <p align="center">
   <img src="backend/src/assets/queue.svg" alt="Rate Limiter Banner" width="100%">
@@ -12,13 +12,13 @@ A production-inspired distributed job queue built with **Node.js, PostgreSQL, Re
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)
 
-## 📖 Project Overview
+##  Project Overview
 
 Reliable Distributed Job Queue Engine is a fault-tolerant background job processing system inspired by production queue architectures.
 
 Jobs are stored durably in PostgreSQL, claimed using a lease mechanism, processed by distributed workers, and automatically recovered if a worker crashes. Failed jobs are retried using exponential backoff before being moved to a Dead Letter Queue (DLQ). The system also includes worker heartbeats, Redis Pub/Sub, WebSocket-based live updates, Docker support, and a React monitoring dashboard.
 
-## ✨ Features
+## Features
 
 - Durable PostgreSQL-backed job queue
 - Lease-based distributed job processing
