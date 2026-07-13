@@ -172,3 +172,42 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## 🐳 Running with Docker
+
+Start the complete application using Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+
+- Backend API
+- React Dashboard
+- PostgreSQL
+- Redis
+
+Stop all services:
+
+```bash
+docker compose down
+```
+
+##  API Overview
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/jobs/createjob` | Create a new job |
+| GET | `/jobs/getall` | Retrieve all jobs |
+| GET | `/queue/stats` | Get queue statistics |
+| GET | `/worker/getworkers` | List registered workers |
+| POST | `/dead-letter/replay/:jobId` | Replay a failed job |
+| GET | `/health` | Health check |
+
+
+##  Author
+
+**Naveen Kumar**
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
