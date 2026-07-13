@@ -205,7 +205,22 @@ docker compose down
 | POST | `/dead-letter/replay/:jobId` | Replay a failed job |
 | GET | `/health` | Health check |
 
+## ✅ Features at a Glance
 
+- Durable PostgreSQL Queue
+- Distributed Worker Processing
+- Lease-based Job Execution
+- Automatic Job Recovery
+- Retry with Exponential Backoff
+- Dead Letter Queue (DLQ)
+- Replay Failed Jobs
+- Worker Heartbeats
+- Offline Worker Detection
+- Redis Pub/Sub
+- WebSocket Dashboard
+- Dockerized Deployment
+
+  
 ##  Author
 
 **Naveen Kumar**
