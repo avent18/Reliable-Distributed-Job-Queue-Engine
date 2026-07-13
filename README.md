@@ -1,7 +1,7 @@
 # 🚀 Reliable Distributed Job Queue Engine
 
 <p align="center">
-  <img src="backend/src/assets/banner.svg" alt="Rate Limiter Banner" width="100%">
+  <img src="backend/src/assets/queue.svg" alt="Rate Limiter Banner" width="100%">
 </p>
 
 A production-inspired distributed job queue built with **Node.js, PostgreSQL, Redis, React, WebSockets, and Docker**. The system ensures reliable background job execution through lease-based processing, automatic recovery, retries with exponential backoff, dead-letter queues, worker heartbeats, and real-time monitoring.
